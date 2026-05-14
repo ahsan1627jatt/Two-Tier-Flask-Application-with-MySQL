@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ahsan.name }} | Message Board</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fb;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header Card */
+        .profile-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            border: 1px solid #eef2f6;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: white;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a2c3e;
+            margin-bottom: 8px;
+        }
+
+        .role {
+            color: #10b981;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .location {
+            color: #6c7a8a;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .social-icons a {
+            color: #6c7a8a;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #10b981;
+            transform: translateY(-2px);
+        }
+
+        /* Message Board Card */
+        .board-card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f6;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #eef2f6;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a2c3e;
+        }
+
+        .message-count {
+            background: #eef2ff;
+            color: #10b981;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Messages List */
+        .messages-list {
+            max-height: 320px;
+            overflow-y: auto;
+            margin-bottom: 28px;
+        }
+
+        .message-item {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .message-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+
+        .message-text {
+            color: #1e2a3a;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .message-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #eef2f6;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Toast */
+        .toast-msg {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1e2a3a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast-msg.success { background: #10b981; }
+        .toast-msg.error { background: #ef4444; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Scrollbar */
+        .messages-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .messages-list::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+        .messages-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 20px 16px; }
+            .profile-card, .board-card { padding: 20px; }
+            .name { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-card">
+            <div class="avatar">
+                <i class="fas fa-code"></i>
+            </div>
+            <h1 class="name">{{ ahsan.name }}</h1>
+            <div class="role">{{ ahsan.role }}</div>
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i> {{ ahsan.location }}
+            </div>
+            <div class="social-icons">
+                <a href="{{ ahsan.github }}" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="{{ ahsan.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="mailto:{{ ahsan.email }}"><i class="fas fa-envelope"></i></a>
+                <a href="/about"><i class="fas fa-user"></i></a>
+            </div>
+        </div>
+
+        <!-- Message Board -->
+        <div class="board-card">
+            <div class="section-header">
+                <h2><i class="fas fa-comment-dots" style="margin-right: 8px; color: #10b981;"></i> Message Board</h2>
+                <span class="message-count" id="messageCount">{{ messages|length }}</span>
+            </div>
+
+            <div class="messages-list" id="messagesContainer">
+                {% if messages %}
+                    {% for msg in messages %}
+                    <div class="message-item">
+                        <div class="message-text">{{ msg.message }}</div>
+                        <div class="message-meta">
+                            {% if msg.name %}<span><i class="fas fa-user"></i> {{ msg.name }}</span>{% endif %}
+                            <span><i class="fas fa-clock"></i> {{ msg.created_at.strftime('%d %b %Y, %I:%M %p') if msg.created_at else 'Just now' }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No messages yet</p>
+                        <p style="font-size: 12px; margin-top: 8px;">Be the first to leave a message!</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <form id="messageForm">
+                <div class="form-group">
+                    <input type="text" name="name" id="name" placeholder="Your name (optional)">
+                </div>
+                <div class="form-group">
+                    <textarea name="new_message" id="message" placeholder="Write your message..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <p>⚡ Containerized with Docker + Nginx | Ahsan Sarwar © 2026</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#messageForm").on("submit", function(event) {
+                event.preventDefault();
+                
+                let message = $("#message").val().trim();
+                let name = $("#name").val().trim();
+                let submitBtn = $("#submitBtn");
+                
+                if (message === "") {
+                    showToast("Message cannot be empty", "error");
+                    return;
+                }
+                
+                submitBtn.html('<i class="fas fa-spinner fa-pulse"></i> Sending...').prop("disabled", true);
+                
+                $.ajax({
+                    url: "/submit",
+                    type: "POST",
+                    data: { new_message: message, name: name },
+                    success: function(response) {
+                        if (response.success) {
+                            if ($(".empty-state").length) {
+                                $(".empty-state").remove();
+                            }
+                            
+                            let now = new Date();
+                            let timeStr = now.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+                            
+                            let newMessage = `
+                                <div class="message-item">
+                                    <div class="message-text">${escapeHtml(response.message)}</div>
+                                    <div class="message-meta">
+                                        ${response.name ? '<span><i class="fas fa-user"></i> ' + escapeHtml(response.name) + '</span>' : ''}
+                                        <span><i class="fas fa-clock"></i> Just now</span>
+                                    </div>
+                                </div>
+                            `;
+                            $("#messagesContainer").prepend(newMessage);
+                            $("#message").val("");
+                            $("#name").val("");
+                            updateMessageCount();
+                            showToast("Message sent!", "success");
+                        }
+                    },
+                    error: function() {
+                        showToast("Failed to send message", "error");
+                    },
+                    complete: function() {
+                        submitBtn.html('<i class="fas fa-paper-plane"></i> Send Message').prop("disabled", false);
+                    }
+                });
+            });
+            
+            function updateMessageCount() {
+                let count = $(".message-item").length;
+                $("#messageCount").text(count);
+                if (count === 0) {
+                    $("#messagesContainer").html('<div class="empty-state"><i class="fas fa-inbox"></i><p>No messages yet</p><p style="font-size: 12px; margin-top: 8px;">Be the first to leave a message!</p></div>');
+                }
+            }
+            
+            function showToast(message, type) {
+                let toast = $(`<div class="toast-msg ${type}">${message}</div>`);
+                $("body").append(toast);
+                setTimeout(() => toast.fadeOut(() => toast.remove()), 3000);
+            }
+            
+            function escapeHtml(text) {
+                if (!text) return '';
+                return text.replace(/[&<>]/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    return m;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
