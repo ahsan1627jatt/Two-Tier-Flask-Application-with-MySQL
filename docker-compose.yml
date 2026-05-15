@@ -1,30 +1,26 @@
-version: "3.8"
+version: "3.7"
 
 services:
   mysql:
-    image: mysql:5.7
-    container_name: ahsan-mysql
+    image: mysql:8.0
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: devops
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
     volumes:
-      - mysql-data:/var/lib/mysql
-      - ./message.sql:/docker-entrypoint-initdb.d/message.sql
+      - mysql-data:/var/lib/mysql/
     networks:
-      - twotier
+      - ahsan-flask
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 60s
-    restart: unless-stopped
+      start_period: 30s
 
-  flask-app:
+  flask:
     build: .
-    container_name: ahsan-flask-app
+    container_name: ahsan-flask-backend
     ports:
       - "5000:5000"
     environment:
@@ -35,18 +31,15 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    networks:
-      - twotier
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
+    networks:
+      - ahsan-flask
 
 networks:
-  twotier:
+  ahsan-flask:
+    name: ahsan-flask
     driver: bridge
 
 volumes:
   mysql-data:
+    name: mysql-data
