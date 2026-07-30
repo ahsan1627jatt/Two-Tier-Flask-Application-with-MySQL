@@ -38,11 +38,7 @@ services:
 networks:
   ahsan-flask:
     name: ahsan-flask
-volumes:
-  mysql-data:
-    name: mysql-data
     driver: bridge
-
 volumes:
   mysql-data:
     name: mysql-data
